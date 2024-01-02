@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import Button from "../ui/Button";
 import { SingleImageDropzone } from "../ui/SingleImageDropzone";
 import { userTypes } from "@/types/userTypes";
-// import { createPost } from "@/app/actions/blogActions";
+import { createPost } from "@/app/actions/blogAction";
 
 const CreateForm = ({ user }: { user: userTypes }) => {
   const [file, setFile] = useState<File>();
