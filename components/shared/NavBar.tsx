@@ -3,21 +3,25 @@ import Link from "next/link";
 import Button from "../ui/Button";
 import Route from "../ui/Route";
 import { navLinks } from "@/constants";
-import { useEffect, useState } from "react";
-import clsx from "clsx";
-import { useRouter } from "next/navigation";
 import MobileMenu from "./MobileMenu";
 import useMenuActive from "@/hooks/useMenuActive";
+import { useEffect, useState } from "react";
+import clsx from "clsx";
 import { User } from "@prisma/client";
+import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import Image from "next/image";
 
 interface NavbarProps {
   user: User;
 }
-const NavBar: React.FC<NavbarProps> = ({ user }) => {
+
+const Navbar: React.FC<NavbarProps> = ({ user }) => {
   const [isScrolling, setIsScrolling] = useState(false);
   const [openUserMenu, setOpenUserMenu] = useState(false);
+
+  const router = useRouter();
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 0) {
@@ -26,23 +30,27 @@ const NavBar: React.FC<NavbarProps> = ({ user }) => {
         setIsScrolling(false);
       }
     };
+
     window.addEventListener("scroll", handleScroll);
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  const router = useRouter();
   return (
     <nav
       className={clsx(
         "py-4 w-full",
-        isScrolling ? "fixed top-0 bg-white shadow-lg z-10" : "relative"
+        isScrolling
+          ? "fixed top-0 bg-white shadow-lg z-10"
+          : "relative"
       )}
     >
       <div
         className={clsx(
           "w-[95%] mx-auto max-w-[1450px] flex  items-center justify-between  border-b border-gray-100",
-          isScrolling && "pb-0 border-none"
+          isScrolling && "pb-0 border-none",
+          !isScrolling && "pb-5"
         )}
       >
         <div className="flex-1">
@@ -53,9 +61,11 @@ const NavBar: React.FC<NavbarProps> = ({ user }) => {
             </h1>
           </Link>
         </div>
+
         <ul className="flex items-center justify-center gap-16 flex-2 max-md:hidden">
           {navLinks.map((link, index) => {
             const isActive = useMenuActive(link.route);
+
             return (
               <li key={index}>
                 <Route
@@ -67,6 +77,7 @@ const NavBar: React.FC<NavbarProps> = ({ user }) => {
             );
           })}
         </ul>
+
         {!user && (
           <div className="flex gap-5 flex-1 justify-end max-md:hidden">
             <Button
@@ -95,6 +106,7 @@ const NavBar: React.FC<NavbarProps> = ({ user }) => {
             />
           </div>
         )}
+
         {openUserMenu && (
           <ul className="z-10 absolute right-12 top-[70px] w-48 bg-white shadow-md rounded-md p-4">
             <Link
@@ -118,12 +130,13 @@ const NavBar: React.FC<NavbarProps> = ({ user }) => {
             </li>
           </ul>
         )}
+
         <div>
-          <MobileMenu />
+          <MobileMenu user={user} />
         </div>
       </div>
     </nav>
   );
 };
 
-export default NavBar;
+export default Navbar;

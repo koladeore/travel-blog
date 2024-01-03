@@ -17,7 +17,7 @@ const page = async () => {
     },
   });
   return (
-    <div className="w-full h-screen flex justify-center items-center">
+    <div className="w-full flex justify-center items-center">
       {!user ? (
         <h1 className="text-3xl font-extrabold">
           Sign in to view your post!

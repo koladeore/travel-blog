@@ -12,21 +12,24 @@ import { navLinks } from "@/constants";
 import Link from "next/link";
 import Route from "../ui/Route";
 import useMenuActive from "@/hooks/useMenuActive";
-// import useMenuActive from "@/hooks/useMenuActive";
-// import { User } from "@prisma/client";
-// import { signOut } from "next-auth/react";
+import { User } from "@prisma/client";
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
-// interface MobileMenuProps {
-//   user: User;
-// }
+interface MobileMenuProps {
+  user: User;
+}
 
-const MobileMenu = () => {
+const MobileMenu: React.FC<MobileMenuProps> = ({
+  user,
+}) => {
   const [openMobileMenu, setOpenMobileMenu] =
     useState(false);
 
   const mobileMenuHandler = () => {
     setOpenMobileMenu(!openMobileMenu);
   };
+  const router = useRouter();
   return (
     <>
       <div
@@ -34,16 +37,16 @@ const MobileMenu = () => {
         onClick={mobileMenuHandler}
       >
         {openMobileMenu ? (
-          <CgClose size={25} />
+          <CgClose size={25}/>
         ) : (
-          <CgMenuGridO size={25} />
+          <CgMenuGridO size={25} className="cursor-pointer"/>
         )}
       </div>
 
       {openMobileMenu ? (
         <div
           onClick={() => setOpenMobileMenu(false)}
-          className="fixed w-full h-screen top-0 left-0 bg-black/25 z-50"
+          className="fixed w-full h-screen top-0 left-0 bg-black/25 z-50 md:hidden"
         >
           <div
             onClick={(e) => e.stopPropagation()}
@@ -51,7 +54,7 @@ const MobileMenu = () => {
           >
             <div className="border-b py-5 text-center">
               <Link href={"/"}>
-                <h1 className="text-3xl font-extrabold text-secondary">
+                <h1 className="text-3xl font-extrabold text-secondary" onClick={() => setOpenMobileMenu(false) }>
                   Explore
                   <span className="text-primary">X</span>
                 </h1>
@@ -68,6 +71,7 @@ const MobileMenu = () => {
             <ul className="flex items-center justify-center gap-5 flex-col mt-5  py-10 border-b">
               {navLinks.map((link, index) => {
                 const isActive = useMenuActive(link.route);
+
                 return (
                   <li key={index}>
                     <Route
@@ -83,73 +87,45 @@ const MobileMenu = () => {
               })}
             </ul>
 
-            {/* {!user && (
-              <div className="flex gap-5 flex-1 flex-col py-5">
+            {!user && (
+              <div className="flex gap-5 flex-1 flex-col py-5" onClick={() => setOpenMobileMenu(false)}>
                 <Button
                   text="Log In"
-                  onClick={() => null}
+                  onClick={() => router.push("/access")}
                   aria="Log in button"
                 />
                 <Button
                   text="Sign Up"
-                  onClick={() => null}
+                  onClick={() => router.push("/access")}
                   aria="Sign up button"
                 />
               </div>
-            )} */}
-            <div className="flex gap-5 flex-1 flex-col py-5">
-                <Button
-                  text="Log In"
-                  onClick={() => null}
-                  aria="Log in button"
-                />
-                <Button
-                  text="Sign Up"
-                  onClick={() => null}
-                  aria="Sign up button"
-                />
-              </div>
-            {/* {user && (
+            )}
+
+            {user && (
               <div>
-                <ul className="flex flex-col  gap-5 items-center">
+                <ul className="flex flex-col  gap-5 items-center" onClick={() => setOpenMobileMenu(false)}>
                   <Link
                     href="/create"
                     onClick={() => setOpenMobileMenu(false)}
+                    className="cursor-pointer"
                   >
                     <li>Create a Post</li>
                   </Link>
                   <Link
                     href="/userposts"
                     onClick={() => setOpenMobileMenu(false)}
+                    className="cursor-pointer"
                   >
                     <li>My Post</li>
                   </Link>
 
-                  <li onClick={() => signOut()}>
+                  <li onClick={() => signOut()} className="cursor-pointer">
                     Sign Out
                   </li>
                 </ul>
               </div>
-            )} */}
-            <div>
-                <ul className="flex flex-col  gap-5 items-center">
-                  <Link
-                    href="/create"
-                    onClick={() => setOpenMobileMenu(false)}
-                  >
-                    <li>Create a Post</li>
-                  </Link>
-                  <Link
-                    href="/userposts"
-                    onClick={() => setOpenMobileMenu(false)}
-                  >
-                    <li>My Post</li>
-                  </Link>
-                  <li>
-                    Sign Out
-                  </li>
-                </ul>
-              </div>
+            )}
           </div>
         </div>
       ) : null}
