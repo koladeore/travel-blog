@@ -7,6 +7,7 @@ import './globals.css'
 import AuthContext from '@/context/AuthContext';
 import getCurrentUser from './actions/getCurrentUser';
 import { EdgeStoreProvider } from '@/lib/edgestore';
+import { Toaster } from 'react-hot-toast';
 
 const roboto = Roboto({ subsets: ['latin'], weight: ["100","400","700","900"] })
 
@@ -26,6 +27,7 @@ export default async function RootLayout({
       <AuthContext>
         <EdgeStoreProvider>
           <body className={`${roboto.className} overflow-x-hidden bg-top`}>
+            <Toaster /> 
             <NavBar user={user as any} />
             {children}
             <Footer />

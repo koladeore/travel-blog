@@ -8,6 +8,7 @@ import Button from "../ui/Button";
 import { SingleImageDropzone } from "../ui/SingleImageDropzone";
 import { userTypes } from "@/types/userTypes";
 import { createPost } from "@/app/actions/blogAction";
+import { toast } from "react-hot-toast";
 
 const CreateForm = ({ user }: { user: userTypes }) => {
   const [file, setFile] = useState<File>();
@@ -52,7 +53,10 @@ const CreateForm = ({ user }: { user: userTypes }) => {
             <Form
               action={createPost}
               className="flex flex-col gap-5 mt-5"
-              onSubmit={() => setFile(undefined)}
+              onSubmit={() => {
+                setFile(undefined);
+                toast.success("Post created");
+              }}
             >
               <Input
                 type="hidden"
